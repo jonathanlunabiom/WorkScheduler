@@ -25,10 +25,9 @@ cloneEl();
 
 function setTime(){
   var j = 8;
-  // var currenthour = new Date().getHours();
-  currenthour = 11
+  var currenthour = new Date().getHours();
  for(let i = 0;i < timeblock.length;i++){
-  if(currenthour>j){
+  if(currenthour > j){
     blocks[i].classList.add("past");
   }else if(currenthour == j){
     blocks[i].classList.add("present");
@@ -45,11 +44,11 @@ function setTime(){
  }
 }
 
-
-btn.addEventListener("click", function(e){
-  var btnclicked = e.target;
-  console.log(btnclicked)
-});
+//Commented for educational purposes
+// btn.addEventListener("click", function(e){
+//   var btnclicked = e.target;
+//   console.log(btnclicked)
+// });
 
 
 
