@@ -1,64 +1,67 @@
 $(document).ready(function() {
-  function timeRefresh() {
-    let day = new Date();
-    let time = [day.getHours(), day.getMinutes(), day.getSeconds()];
-    $("#currentDay").text("Current time hour: " + time[0] + " hour(s) " + time[1] + " minutes and " + time[2] + " seconds.");
-  }
 
-  function cloneEl(){
-    console.log("hello")
-    for(var i = 0;i < 9;i++){
-      $("#hour-9").clone().append(".body")
+    function timeRefresh() {
+      let day = new Date();
+      let time = [day.getHours(), day.getMinutes(), day.getSeconds()];
+      $("#currentHour").text("Current time hour: " + time[0] + " hour(s) " + time[1] + " minutes and " + time[2] + " seconds.");
     }
+
+  $("#currentDay").text(dayjs().format("dddd D MMMM YYYY."));
+
+  var hours = $('.hour');
+  function cloneElement() {
+    var i = 10;
+    var k = 9
+    for (var j=10;j<19;j++){
+      let eachday = $('#hour-9').clone().addClass('time-block').attr('id', 'hour-' + j);
+      $('.maincontainer').append(eachday);
+      hours.text(dayjs().hour(j).format("h A"))
+    }
+    $('#hour-9').hide();
   }
+    
+  cloneElement();
 
-  cloneEl();
-  var btn = $(".saveBtn");
-  btn.on("click",function(){
-    var parentBlock = btn.parent().attr("id"); 
-    var info = btn.siblings(".description").val(); 
-
-    localStorage.setItem(parentBlock,info)
+  $('.time-block').each(function(){
+    var timeline_block = parseInt($(this).attr('id').split("-")[1]);
+    var currentHour = dayjs().hour();
+    console.log("hour" + currentHour)
+    if(currentHour > timeline_block-1){
+    $(this).addClass('past')
+    }else if(currentHour < timeline_block-1){
+    $(this).addClass('future')
+    }else{
+    $(this).addClass('present')
+    }
   });
 
+  $('.time-block').each(function(){
+  console.log($(this).attr('id'));
+  console.log()
+  });
+  var datasaved = null;
+  var btn = $(".saveBtn");
+  btn.on("click",function(e){
+    e.preventDefault();
+    var parentBlock = $(this).parent().attr('id'); 
+    var info = $(this).siblings(".description").val(); 
+    if(!info){
+      alert("Not item input was found")
+      return;
+    }
+    let storageitem = localStorage.getItem("schedule") ? JSON.parse(localStorage.getItem("schedule")) : []
+    var duplicatedinfo = storageitem.some(inforetrieved => inforetrieved.parentBlock === parentBlock && inforetrieved.info === info);
+    if(!duplicatedinfo){
+      storageitem.push({parentBlock,info})
+      localStorage.setItem("schedule",JSON.stringify(storageitem))
+    }
 
+  });
 
-
+    // for(var i=0;i<storageitem.length;i++){
+    //   console.log(storageitem[i])
+      
+    // }
 
   setInterval(timeRefresh,1000);
-});
-
-
-//Start of function
-$(function () {
-  // Listener for click events on the save button
-  $(".saveBtn").on("click", function () {
-    var timeBlock = $(this).parent().attr("id"); // Get the id of the containing time-block
-    var description = $(this).siblings(".description").val().trim(); // Get the user input from the textarea
-    // Save the description in local storage using the time-block id as the key
-    localStorage.setItem(timeBlock, description);
-  });
-  // Apply past, present, or future class to each time block
-  var currentHour = dayjs().format("H"); // Get the current hour in 24-hour time
-  $(".time-block").each(function () {
-    var timeBlockHour = parseInt($(this).attr("id").split("-")[1]); // Extract the hour from the time-block id
-    // Compare the time block hour with the current hour and apply the appropriate class
-    if (timeBlockHour < currentHour) {
-      $(this).addClass("past");
-    } else if (timeBlockHour == currentHour) {
-      $(this).addClass("present");
-    } else {
-      $(this).addClass("future");
-    }
-  });
-  // Get user input from localStorage and set textarea values
-  $(".time-block").each(function () {
-    var timeBlockId = $(this).attr("id"); // Get the time-block id
-    var savedDescription = localStorage.getItem(timeBlockId); // Retrieve the corresponding description from localStorage
-    if (savedDescription !== null) {
-      $(this).find(".description").val(savedDescription); // Set the textarea value with the saved description
-    }
-  });
-  // Display the current date in the header of the page
-  $("#currentDay").text(dayjs().format("dddd, MMMM D, YYYY"));
 });
