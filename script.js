@@ -13,8 +13,7 @@ $(document).ready(function() {
     var i = 10;
     var k = 9
     for (var j=10;j<19;j++){
-      let eachday = $('#hour-9').clone().addClass('time-block').attr('id', 'hour-' + j);
-      $('.maincontainer').append(eachday);
+      $('#hour-9').clone().addClass('time-block').appendTo('.maincontainer').attr('id', 'hour-' + j);
       hours.text(dayjs().hour(j).format("h A"))
     }
     $('#hour-9').hide();
@@ -34,7 +33,6 @@ $(document).ready(function() {
     }
   });
 
-  var datasaved = null;
   var btn = $(".saveBtn");
   btn.on("click",function(e){
     e.preventDefault();
@@ -44,17 +42,15 @@ $(document).ready(function() {
       alert("Not item input was found")
       return;
     }
-    let storageitem = localStorage.getItem("schedule") ? JSON.parse(localStorage.getItem("schedule")) : [] //if exist it save it in the form of an object otherwise it doesnt
-    var duplicatedinfo = storageitem.some(duEl => duEl.parentBlock === parentBlock); //it checks for duplicated items, if there exist a duplicated one it returns a false.
-    
-    if(!duplicatedinfo){
-      storageitem.push({parentBlock,info})
-      localStorage.setItem("schedule",JSON.stringify(storageitem))
-    }
-    console.log(storageitem)
-    //i got kind of confuse in setting the for loop which is going to check if an element already exists on the storageitem
+    localStorage.setItem(parentBlock,info)
   });
-  //console.log(storageitem) //for some reason storageitem doesnt exists outside the button
+
+  $('.time-block').each(function(){
+    var eachinfo = $(this).attr('id')
+    var storedData = localStorage.getItem(eachinfo)
+    $(this).find('.description').append(storedData)
+  });
+
 
 
   setInterval(timeRefresh,1000);
