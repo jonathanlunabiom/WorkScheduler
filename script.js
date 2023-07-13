@@ -31,11 +31,15 @@ $(document).ready(function() {
     }else{
     $(this).addClass('present')
     }
+    var eachinfo = $(this).attr('id')
+    var storedData = localStorage.getItem(eachinfo)
+    $(this).find('.description').append(storedData)
   });
 
   var btn = $(".saveBtn");
   btn.on("click",function(e){
     e.preventDefault();
+    $('.savedinfo').text = "saved"
     var parentBlock = $(this).parent().attr('id'); 
     var info = $(this).siblings(".description").val(); 
     if(!info){
@@ -45,11 +49,10 @@ $(document).ready(function() {
     localStorage.setItem(parentBlock,info)
   });
 
-  $('.time-block').each(function(){
-    var eachinfo = $(this).attr('id')
-    var storedData = localStorage.getItem(eachinfo)
-    $(this).find('.description').append(storedData)
-  });
+  var btnDelete = $('.deleteAll');
+  btnDelete.on("click",function(){
+    localStorage.clear();
+  })
 
   setInterval(timeRefresh,1000);
 });
