@@ -51,7 +51,5 @@ $(document).ready(function() {
     $(this).find('.description').append(storedData)
   });
 
-
-
   setInterval(timeRefresh,1000);
 });
