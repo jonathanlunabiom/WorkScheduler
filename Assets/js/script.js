@@ -43,7 +43,7 @@ $(document).ready(function() {
     var parentBlock = $(this).parent().attr('id'); 
     var info = $(this).siblings(".description").val(); 
     if(!info){
-      alert("Not item input was found")
+      alert("Not enough arguments")
       return;
     }
     localStorage.setItem(parentBlock,info)
@@ -52,6 +52,7 @@ $(document).ready(function() {
   var btnDelete = $('.deleteAll');
   btnDelete.on("click",function(){
     localStorage.clear();
+    $('.description').val('')
   })
 
   setInterval(timeRefresh,1000);
